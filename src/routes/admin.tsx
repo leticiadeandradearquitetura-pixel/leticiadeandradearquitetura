@@ -281,7 +281,19 @@ function AdminPage() {
                     <p style={s.smallLabel}>Galeria de fotos</p>
                     <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: 6 }}>
                       {(galeria[p.id] ?? []).map((g) => (
-                        <div key={g.id} style={{ position: "relative", aspectRatio: "1", background: `center/cover url(${g.url})`, border: "1px solid #1f1f1f" }}>
+                        <div
+                          key={g.id}
+                          style={{
+                            position: "relative",
+                            aspectRatio: "4/3",
+                            backgroundColor: "#0d0d0d",
+                            backgroundImage: `url(${g.url})`,
+                            backgroundSize: "contain",
+                            backgroundPosition: "center",
+                            backgroundRepeat: "no-repeat",
+                            border: "1px solid #1f1f1f",
+                          }}
+                        >
                           <button
                             onClick={() => delGaleriaImg(g.id)}
                             style={{ position: "absolute", top: 4, right: 4, background: "rgba(0,0,0,0.7)", color: "#fff", border: "none", width: 22, height: 22, cursor: "pointer", fontSize: 12 }}

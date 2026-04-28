@@ -18,7 +18,7 @@ function LoginPage() {
   const { user, isAdmin, loading } = useAuth();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [mode, setMode] = useState<"login" | "signup">("login");
+  const [mode, setMode] = useState<"login" | "signup" | "forgot">("login");
   const [allowSignup, setAllowSignup] = useState(false);
   const [busy, setBusy] = useState(false);
   const [msg, setMsg] = useState<string | null>(null);
@@ -56,6 +56,12 @@ function LoginPage() {
           if (rerr) throw rerr;
           setMsg("Conta criada! Você já é o administrador. Entrando...");
         }
+      } else if (mode === "forgot") {
+        const { error } = await supabase.auth.resetPasswordForEmail(email, {
+          redirectTo: `${window.location.origin}/reset-password`,
+        });
+        if (error) throw error;
+        setMsg("Pronto! Verifique seu e-mail para redefinir a senha.");
       } else {
         const { error } = await supabase.auth.signInWithPassword({ email, password });
         if (error) throw error;
@@ -72,11 +78,13 @@ function LoginPage() {
       <div style={styles.card}>
         <Link to="/" style={styles.back}>← voltar ao site</Link>
         <h1 style={styles.title}>
-          {mode === "signup" ? "Criar conta admin" : "Acesso Admin"}
+          {mode === "signup" ? "Criar conta admin" : mode === "forgot" ? "Recuperar senha" : "Acesso Admin"}
         </h1>
         <p style={styles.sub}>
           {mode === "signup"
             ? "Primeiro acesso — crie a conta de administradora do site."
+            : mode === "forgot"
+            ? "Digite seu e-mail e enviaremos um link para criar uma nova senha."
             : "Entre para gerenciar as fotos do site."}
         </p>
 
@@ -89,21 +97,36 @@ function LoginPage() {
             onChange={(e) => setEmail(e.target.value)}
             style={styles.input}
           />
-          <label style={styles.label}>Senha</label>
-          <input
-            type="password"
-            required
-            minLength={6}
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            style={styles.input}
-          />
+          {mode !== "forgot" && (
+            <>
+              <label style={styles.label}>Senha</label>
+              <input
+                type="password"
+                required
+                minLength={6}
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                style={styles.input}
+              />
+            </>
+          )}
           <button type="submit" disabled={busy} style={styles.btn}>
-            {busy ? "Aguarde..." : mode === "signup" ? "Criar conta" : "Entrar"}
+            {busy ? "Aguarde..." : mode === "signup" ? "Criar conta" : mode === "forgot" ? "Enviar link" : "Entrar"}
           </button>
         </form>
 
         {msg && <p style={styles.msg}>{msg}</p>}
+
+        {mode === "login" && (
+          <button onClick={() => { setMode("forgot"); setMsg(null); }} style={styles.toggle}>
+            Esqueci minha senha
+          </button>
+        )}
+        {mode === "forgot" && (
+          <button onClick={() => { setMode("login"); setMsg(null); }} style={styles.toggle}>
+            ← voltar para login
+          </button>
+        )}
 
         {allowSignup && (
           <button

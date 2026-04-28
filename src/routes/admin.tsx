@@ -14,7 +14,28 @@ export const Route = createFileRoute("/admin")({
 });
 
 type SiteImage = { key: string; url: string };
-type Projeto = { id: string; nome: string; tipo: string; foto_url: string | null; ordem: number };
+type Projeto = {
+  id: string;
+  nome: string;
+  tipo: string;
+  foto_url: string | null;
+  ordem: number;
+  slug: string;
+  descricao: string | null;
+  local: string | null;
+  area: string | null;
+  ano: string | null;
+};
+type ProjetoImagem = { id: string; projeto_id: string; url: string; ordem: number };
+
+function slugify(s: string) {
+  return s
+    .toLowerCase()
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "")
+    .replace(/[^a-z0-9]+/g, "-")
+    .replace(/(^-|-$)/g, "");
+}
 
 function AdminPage() {
   const navigate = useNavigate();
@@ -22,6 +43,8 @@ function AdminPage() {
 
   const [images, setImages] = useState<Record<string, string>>({});
   const [projetos, setProjetos] = useState<Projeto[]>([]);
+  const [galeria, setGaleria] = useState<Record<string, ProjetoImagem[]>>({});
+  const [openProj, setOpenProj] = useState<string | null>(null);
   const [busy, setBusy] = useState<string | null>(null);
   const [msg, setMsg] = useState<string | null>(null);
 
@@ -30,14 +53,20 @@ function AdminPage() {
   }, [user, isAdmin, loading, navigate]);
 
   const refresh = async () => {
-    const [{ data: imgs }, { data: projs }] = await Promise.all([
+    const [{ data: imgs }, { data: projs }, { data: gals }] = await Promise.all([
       supabase.from("site_images").select("key,url"),
       supabase.from("projetos").select("*").order("ordem"),
+      supabase.from("projeto_imagens").select("*").order("ordem"),
     ]);
     const map: Record<string, string> = {};
     (imgs ?? []).forEach((i: SiteImage) => (map[i.key] = i.url));
     setImages(map);
-    setProjetos(projs ?? []);
+    setProjetos((projs ?? []) as Projeto[]);
+    const g: Record<string, ProjetoImagem[]> = {};
+    (gals ?? []).forEach((row) => {
+      (g[row.projeto_id] ||= []).push(row as ProjetoImagem);
+    });
+    setGaleria(g);
   };
 
   useEffect(() => {
@@ -92,7 +121,7 @@ function AdminPage() {
 
   const updateProjetoCampo = async (
     id: string,
-    campo: "nome" | "tipo" | "ordem",
+    campo: "nome" | "tipo" | "ordem" | "slug" | "descricao" | "local" | "area" | "ano",
     valor: string | number,
   ) => {
     const patch: Record<string, string | number> = { [campo]: valor };
@@ -102,13 +131,40 @@ function AdminPage() {
 
   const addProjeto = async () => {
     const ordem = (projetos[projetos.length - 1]?.ordem ?? 0) + 1;
-    await supabase.from("projetos").insert({ nome: "Novo projeto", tipo: "Interiores", ordem });
+    const nome = "Novo projeto";
+    const slug = `${slugify(nome)}-${Date.now().toString(36)}`;
+    await supabase.from("projetos").insert({ nome, tipo: "Interiores", ordem, slug });
     refresh();
   };
 
   const delProjeto = async (id: string) => {
     if (!confirm("Excluir este projeto?")) return;
     await supabase.from("projetos").delete().eq("id", id);
+    refresh();
+  };
+
+  const addGaleriaImg = async (projetoId: string, file: File) => {
+    setBusy(`g-${projetoId}`);
+    setMsg(null);
+    try {
+      const url = await uploadAndGetUrl(file, `projetos/${projetoId}/galeria`);
+      const ordem = (galeria[projetoId]?.length ?? 0) + 1;
+      const { error } = await supabase
+        .from("projeto_imagens")
+        .insert({ projeto_id: projetoId, url, ordem });
+      if (error) throw error;
+      await refresh();
+      setMsg("Imagem adicionada à galeria!");
+    } catch (e) {
+      setMsg((e as Error).message);
+    } finally {
+      setBusy(null);
+    }
+  };
+
+  const delGaleriaImg = async (id: string) => {
+    if (!confirm("Remover esta imagem da galeria?")) return;
+    await supabase.from("projeto_imagens").delete().eq("id", id);
     refresh();
   };
 
@@ -181,6 +237,71 @@ function AdminPage() {
                   style={s.inlineInputSmall}
                   placeholder="Tipo (ex: Interiores — Reforma)"
                 />
+                <input
+                  defaultValue={p.slug}
+                  onBlur={(e) => e.target.value !== p.slug && updateProjetoCampo(p.id, "slug", slugify(e.target.value))}
+                  style={s.inlineInputSmall}
+                  placeholder="URL (slug, ex: casa-praia)"
+                />
+                <button
+                  type="button"
+                  onClick={() => setOpenProj(openProj === p.id ? null : p.id)}
+                  style={s.linkBtn}
+                >
+                  {openProj === p.id ? "Fechar detalhes" : `Detalhes & galeria (${galeria[p.id]?.length ?? 0})`}
+                </button>
+                {openProj === p.id && (
+                  <div style={{ display: "flex", flexDirection: "column", gap: 8, paddingTop: 8, borderTop: "1px solid #1f1f1f" }}>
+                    <textarea
+                      defaultValue={p.descricao ?? ""}
+                      onBlur={(e) => e.target.value !== (p.descricao ?? "") && updateProjetoCampo(p.id, "descricao", e.target.value)}
+                      style={{ ...s.inlineInput, minHeight: 80, resize: "vertical" }}
+                      placeholder="Descrição do projeto"
+                    />
+                    <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: 8 }}>
+                      <input
+                        defaultValue={p.local ?? ""}
+                        onBlur={(e) => e.target.value !== (p.local ?? "") && updateProjetoCampo(p.id, "local", e.target.value)}
+                        style={s.inlineInputSmall}
+                        placeholder="Local"
+                      />
+                      <input
+                        defaultValue={p.area ?? ""}
+                        onBlur={(e) => e.target.value !== (p.area ?? "") && updateProjetoCampo(p.id, "area", e.target.value)}
+                        style={s.inlineInputSmall}
+                        placeholder="Área (m²)"
+                      />
+                      <input
+                        defaultValue={p.ano ?? ""}
+                        onBlur={(e) => e.target.value !== (p.ano ?? "") && updateProjetoCampo(p.id, "ano", e.target.value)}
+                        style={s.inlineInputSmall}
+                        placeholder="Ano"
+                      />
+                    </div>
+                    <p style={s.smallLabel}>Galeria de fotos</p>
+                    <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: 6 }}>
+                      {(galeria[p.id] ?? []).map((g) => (
+                        <div key={g.id} style={{ position: "relative", aspectRatio: "1", background: `center/cover url(${g.url})`, border: "1px solid #1f1f1f" }}>
+                          <button
+                            onClick={() => delGaleriaImg(g.id)}
+                            style={{ position: "absolute", top: 4, right: 4, background: "rgba(0,0,0,0.7)", color: "#fff", border: "none", width: 22, height: 22, cursor: "pointer", fontSize: 12 }}
+                            title="Remover"
+                          >×</button>
+                        </div>
+                      ))}
+                      <ImageSlot
+                        compact
+                        busy={busy === `g-${p.id}`}
+                        onSelect={(f) => addGaleriaImg(p.id, f)}
+                      />
+                    </div>
+                    {p.slug && (
+                      <Link to="/projetos/$slug" params={{ slug: p.slug }} style={{ ...s.linkBtn, textAlign: "center" }}>
+                        Ver página do projeto
+                      </Link>
+                    )}
+                  </div>
+                )}
                 <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginTop: 8 }}>
                   <label style={s.smallLabel}>
                     Ordem:

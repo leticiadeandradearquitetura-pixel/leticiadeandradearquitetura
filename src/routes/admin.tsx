@@ -90,8 +90,13 @@ function AdminPage() {
     }
   };
 
-  const updateProjetoCampo = async (id: string, campo: "nome" | "tipo" | "ordem", valor: string | number) => {
-    await supabase.from("projetos").update({ [campo]: valor }).eq("id", id);
+  const updateProjetoCampo = async (
+    id: string,
+    campo: "nome" | "tipo" | "ordem",
+    valor: string | number,
+  ) => {
+    const patch: Record<string, string | number> = { [campo]: valor };
+    await supabase.from("projetos").update(patch as never).eq("id", id);
     refresh();
   };
 

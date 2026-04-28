@@ -191,7 +191,13 @@ function Index() {
                 <div className="projeto-overlay">
                   <span className="projeto-tipo">{p.tipo}</span>
                   <span className="projeto-nome-bottom">{p.nome}</span>
-                  <a href="#" className="projeto-link">Veja o Projeto →</a>
+                  {p.slug ? (
+                    <Link to="/projetos/$slug" params={{ slug: p.slug }} className="projeto-link">
+                      Veja o Projeto →
+                    </Link>
+                  ) : (
+                    <span className="projeto-link" style={{ opacity: 0.5 }}>Em breve →</span>
+                  )}
                 </div>
               </div>
             ))}
@@ -258,7 +264,7 @@ function Index() {
   );
 }
 
-type ProjetoCard = { nome: string; tipo: string; cls: string; foto?: string };
+type ProjetoCard = { nome: string; tipo: string; cls: string; foto?: string; slug?: string };
 const projetos: ProjetoCard[] = [
   { nome: "Apartamento Bleu", tipo: "Interiores — Apartamento Novo", cls: "p1" },
   { nome: "Apartamento Sole", tipo: "Interiores — Reforma", cls: "p2" },

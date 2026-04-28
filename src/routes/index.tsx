@@ -28,7 +28,7 @@ function Index() {
   const navRef = useRef<HTMLElement>(null);
   const [heroUrl, setHeroUrl] = useState<string>(heroImg);
   const [sobreUrl, setSobreUrl] = useState<string>(sobreImg);
-  const [projetosDb, setProjetosDb] = useState<typeof projetos | null>(null);
+  const [projetosDb, setProjetosDb] = useState<ProjetoCard[] | null>(null);
 
   useEffect(() => {
     supabase
@@ -42,7 +42,7 @@ function Index() {
       });
     supabase
       .from("projetos")
-      .select("id,nome,tipo,foto_url,ordem")
+      .select("id,nome,tipo,foto_url,ordem,slug")
       .order("ordem")
       .then(({ data }) => {
         if (data && data.length) {
@@ -52,7 +52,8 @@ function Index() {
               tipo: p.tipo,
               cls: ["p1", "p2", "p3", "p4"][i % 4],
               foto: p.foto_url ?? undefined,
-            })) as typeof projetos,
+              slug: p.slug,
+            })),
           );
         }
       });

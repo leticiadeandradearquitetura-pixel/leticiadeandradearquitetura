@@ -257,7 +257,8 @@ function Index() {
   );
 }
 
-const projetos = [
+type ProjetoCard = { nome: string; tipo: string; cls: string; foto?: string };
+const projetos: ProjetoCard[] = [
   { nome: "Apartamento Bleu", tipo: "Interiores — Apartamento Novo", cls: "p1" },
   { nome: "Apartamento Sole", tipo: "Interiores — Reforma", cls: "p2" },
   { nome: "Bruno Personal Studio", tipo: "Arquitetônico — Porto Belo", cls: "p3" },

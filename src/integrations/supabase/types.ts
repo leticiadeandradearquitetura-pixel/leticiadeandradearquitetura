@@ -14,31 +14,78 @@ export type Database = {
   }
   public: {
     Tables: {
-      projetos: {
+      projeto_imagens: {
         Row: {
           created_at: string
+          id: string
+          ordem: number
+          projeto_id: string
+          url: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          ordem?: number
+          projeto_id: string
+          url: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          ordem?: number
+          projeto_id?: string
+          url?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "projeto_imagens_projeto_id_fkey"
+            columns: ["projeto_id"]
+            isOneToOne: false
+            referencedRelation: "projetos"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      projetos: {
+        Row: {
+          ano: string | null
+          area: string | null
+          created_at: string
+          descricao: string | null
           foto_url: string | null
           id: string
+          local: string | null
           nome: string
           ordem: number
+          slug: string
           tipo: string
           updated_at: string
         }
         Insert: {
+          ano?: string | null
+          area?: string | null
           created_at?: string
+          descricao?: string | null
           foto_url?: string | null
           id?: string
+          local?: string | null
           nome: string
           ordem?: number
+          slug: string
           tipo: string
           updated_at?: string
         }
         Update: {
+          ano?: string | null
+          area?: string | null
           created_at?: string
+          descricao?: string | null
           foto_url?: string | null
           id?: string
+          local?: string | null
           nome?: string
           ordem?: number
+          slug?: string
           tipo?: string
           updated_at?: string
         }

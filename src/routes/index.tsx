@@ -1,4 +1,4 @@
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, Link } from "@tanstack/react-router";
 import { useEffect, useRef, useState } from "react";
 import heroImg from "@/assets/hero-architecture.jpg";
 import sobreImg from "@/assets/sobre-leticia.jpg";
@@ -28,7 +28,7 @@ function Index() {
   const navRef = useRef<HTMLElement>(null);
   const [heroUrl, setHeroUrl] = useState<string>(heroImg);
   const [sobreUrl, setSobreUrl] = useState<string>(sobreImg);
-  const [projetosDb, setProjetosDb] = useState<typeof projetos | null>(null);
+  const [projetosDb, setProjetosDb] = useState<ProjetoCard[] | null>(null);
 
   useEffect(() => {
     supabase
@@ -42,7 +42,7 @@ function Index() {
       });
     supabase
       .from("projetos")
-      .select("id,nome,tipo,foto_url,ordem")
+      .select("id,nome,tipo,foto_url,ordem,slug")
       .order("ordem")
       .then(({ data }) => {
         if (data && data.length) {
@@ -52,7 +52,8 @@ function Index() {
               tipo: p.tipo,
               cls: ["p1", "p2", "p3", "p4"][i % 4],
               foto: p.foto_url ?? undefined,
-            })) as typeof projetos,
+              slug: p.slug,
+            })),
           );
         }
       });
@@ -190,7 +191,13 @@ function Index() {
                 <div className="projeto-overlay">
                   <span className="projeto-tipo">{p.tipo}</span>
                   <span className="projeto-nome-bottom">{p.nome}</span>
-                  <a href="#" className="projeto-link">Veja o Projeto →</a>
+                  {p.slug ? (
+                    <Link to="/projetos/$slug" params={{ slug: p.slug }} className="projeto-link">
+                      Veja o Projeto →
+                    </Link>
+                  ) : (
+                    <span className="projeto-link" style={{ opacity: 0.5 }}>Em breve →</span>
+                  )}
                 </div>
               </div>
             ))}
@@ -257,7 +264,7 @@ function Index() {
   );
 }
 
-type ProjetoCard = { nome: string; tipo: string; cls: string; foto?: string };
+type ProjetoCard = { nome: string; tipo: string; cls: string; foto?: string; slug?: string };
 const projetos: ProjetoCard[] = [
   { nome: "Apartamento Bleu", tipo: "Interiores — Apartamento Novo", cls: "p1" },
   { nome: "Apartamento Sole", tipo: "Interiores — Reforma", cls: "p2" },

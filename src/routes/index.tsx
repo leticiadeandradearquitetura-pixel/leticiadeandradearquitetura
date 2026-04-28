@@ -353,10 +353,10 @@ html { scroll-behavior:smooth; }
 .leticia-site .projeto-card { position:relative; overflow:hidden; cursor:pointer; background:var(--gray-dark); }
 .leticia-site .projeto-placeholder { width:100%; aspect-ratio:3/4; height:auto; transition:filter 0.6s cubic-bezier(0.25,0.46,0.45,0.94), transform 0.6s ease; filter:grayscale(100%); background-size:contain; background-position:center; background-repeat:no-repeat; background-color:var(--beige); }
 .leticia-site .projeto-card:hover .projeto-placeholder { filter:grayscale(0%); transform:scale(1.03); }
-.leticia-site .p1 { background:linear-gradient(135deg,#8B7355 0%,#C4A882 40%,#6B5B45 100%); }
-.leticia-site .p2 { background:linear-gradient(135deg,#5B6B7A 0%,#8BA3B5 40%,#3D5060 100%); }
-.leticia-site .p3 { background:linear-gradient(135deg,#7A6B5B 0%,#B5A08A 40%,#5A4B3B 100%); }
-.leticia-site .p4 { background:linear-gradient(135deg,#6B7A5B 0%,#9AB08A 40%,#4B5A3B 100%); }
+.leticia-site .p1 { background-image:linear-gradient(135deg,#8B7355 0%,#C4A882 40%,#6B5B45 100%); }
+.leticia-site .p2 { background-image:linear-gradient(135deg,#5B6B7A 0%,#8BA3B5 40%,#3D5060 100%); }
+.leticia-site .p3 { background-image:linear-gradient(135deg,#7A6B5B 0%,#B5A08A 40%,#5A4B3B 100%); }
+.leticia-site .p4 { background-image:linear-gradient(135deg,#6B7A5B 0%,#9AB08A 40%,#4B5A3B 100%); }
 .leticia-site .projeto-overlay { position:absolute; inset:0; background:linear-gradient(to top, rgba(0,0,0,0.85) 0%, transparent 50%); display:flex; flex-direction:column; justify-content:flex-end; padding:32px; opacity:0; transition:opacity 0.4s ease; }
 .leticia-site .projeto-card:hover .projeto-overlay { opacity:1; }
 .leticia-site .projeto-info-top { position:absolute; top:0; left:0; right:0; padding:24px 32px; display:flex; justify-content:space-between; align-items:flex-start; }

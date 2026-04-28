@@ -399,8 +399,9 @@ const s: Record<string, React.CSSProperties> = {
   dropZone: {
     border: "1px dashed #333",
     background: "#0d0d0d",
-    backgroundSize: "cover",
+    backgroundSize: "contain",
     backgroundPosition: "center",
+    backgroundRepeat: "no-repeat",
     display: "flex",
     alignItems: "center",
     justifyContent: "center",

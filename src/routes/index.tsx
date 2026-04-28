@@ -1,7 +1,8 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import heroImg from "@/assets/hero-architecture.jpg";
 import sobreImg from "@/assets/sobre-leticia.jpg";
+import { supabase } from "@/integrations/supabase/client";
 
 export const Route = createFileRoute("/")({
   head: () => ({
@@ -25,6 +26,39 @@ export const Route = createFileRoute("/")({
 
 function Index() {
   const navRef = useRef<HTMLElement>(null);
+  const [heroUrl, setHeroUrl] = useState<string>(heroImg);
+  const [sobreUrl, setSobreUrl] = useState<string>(sobreImg);
+  const [projetosDb, setProjetosDb] = useState<typeof projetos | null>(null);
+
+  useEffect(() => {
+    supabase
+      .from("site_images")
+      .select("key,url")
+      .then(({ data }) => {
+        data?.forEach((row) => {
+          if (row.key === "hero" && row.url) setHeroUrl(row.url);
+          if (row.key === "sobre" && row.url) setSobreUrl(row.url);
+        });
+      });
+    supabase
+      .from("projetos")
+      .select("id,nome,tipo,foto_url,ordem")
+      .order("ordem")
+      .then(({ data }) => {
+        if (data && data.length) {
+          setProjetosDb(
+            data.map((p, i) => ({
+              nome: p.nome,
+              tipo: p.tipo,
+              cls: ["p1", "p2", "p3", "p4"][i % 4],
+              foto: p.foto_url ?? undefined,
+            })) as typeof projetos,
+          );
+        }
+      });
+  }, []);
+
+  const projetosToShow = projetosDb ?? projetos;
 
   useEffect(() => {
     const onScroll = () => {
@@ -68,7 +102,7 @@ function Index() {
         <section id="hero">
           <div
             className="hero-bg"
-            style={{ backgroundImage: `url(${heroImg})` }}
+            style={{ backgroundImage: `url(${heroUrl})` }}
           />
           <span className="hero-year">2026</span>
           <div className="hero-content">
@@ -136,7 +170,7 @@ function Index() {
             </div>
           </div>
           <div className="sobre-image reveal" style={{ transitionDelay: "0.2s" }}>
-            <img src={sobreImg} alt="Letícia de Andrade — arquiteta" loading="lazy" width={1024} height={1280} />
+            <img src={sobreUrl} alt="Letícia de Andrade — arquiteta" loading="lazy" width={1024} height={1280} />
           </div>
         </section>
 
@@ -146,9 +180,12 @@ function Index() {
             <span className="projetos-label">Our Work</span>
           </div>
           <div className="projetos-grid">
-            {projetos.map((p, i) => (
+            {projetosToShow.map((p, i) => (
               <div key={p.nome} className="projeto-card reveal" style={{ transitionDelay: `${i * 0.1}s` }}>
-                <div className={`projeto-placeholder ${p.cls}`} />
+                <div
+                  className={`projeto-placeholder ${p.cls}`}
+                  style={p.foto ? { backgroundImage: `url(${p.foto})` } : undefined}
+                />
                 <div className="projeto-info-top"><span className="projeto-nome">{p.nome}</span></div>
                 <div className="projeto-overlay">
                   <span className="projeto-tipo">{p.tipo}</span>

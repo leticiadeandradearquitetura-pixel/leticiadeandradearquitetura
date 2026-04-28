@@ -344,7 +344,7 @@ html { scroll-behavior:smooth; }
 .leticia-site .projetos-label { font-size:10px; letter-spacing:0.3em; text-transform:uppercase; color:var(--gray-mid); }
 .leticia-site .projetos-grid { display:grid; grid-template-columns:1fr 1fr; gap:24px; }
 .leticia-site .projeto-card { position:relative; overflow:hidden; cursor:pointer; background:var(--gray-dark); }
-.leticia-site .projeto-placeholder { width:100%; height:420px; transition:filter 0.6s cubic-bezier(0.25,0.46,0.45,0.94), transform 0.6s ease; filter:grayscale(100%); background-size:cover; background-position:center; }
+.leticia-site .projeto-placeholder { width:100%; height:420px; transition:filter 0.6s cubic-bezier(0.25,0.46,0.45,0.94), transform 0.6s ease; filter:grayscale(100%); background-size:contain; background-position:center; background-repeat:no-repeat; background-color:var(--beige); }
 .leticia-site .projeto-card:hover .projeto-placeholder { filter:grayscale(0%); transform:scale(1.03); }
 .leticia-site .p1 { background:linear-gradient(135deg,#8B7355 0%,#C4A882 40%,#6B5B45 100%); }
 .leticia-site .p2 { background:linear-gradient(135deg,#5B6B7A 0%,#8BA3B5 40%,#3D5060 100%); }

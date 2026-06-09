@@ -257,7 +257,7 @@ function Index() {
 
         <footer>
           <span>© 2026 Letícia de Andrade Arquitetura e Interiores</span>
-          <span>Itapema & Porto Belo — SC</span>
+          <span>Porto Belo, SC · (49) 99993-3040</span>
         </footer>
       </div>
     </>

@@ -48,6 +48,26 @@ export const Route = createRootRoute({
         href: appCss,
       },
     ],
+    scripts: [
+      {
+        type: "application/ld+json",
+        children: JSON.stringify({
+          "@context": "https://schema.org",
+          "@type": "LocalBusiness",
+          "name": "Letícia de Andrade Arquitetura e Interiores",
+          "description": "Arquiteta e designer de interiores em Porto Belo e Itapema, SC. Projetos residenciais personalizados com foco em iluminação, layout e valorização do imóvel.",
+          "url": "https://leticiadeandradearquitetura.com",
+          "telephone": "+554999993040",
+          "address": {
+            "@type": "PostalAddress",
+            "addressLocality": "Porto Belo",
+            "addressRegion": "SC",
+            "addressCountry": "BR"
+          },
+          "areaServed": ["Porto Belo", "Itapema", "Bombinhas", "Balneário Camboriú", "Navegantes"]
+        }),
+      },
+    ],
   }),
   shellComponent: RootShell,
   component: RootComponent,

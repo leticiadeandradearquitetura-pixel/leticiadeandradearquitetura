@@ -107,7 +107,7 @@ function Index() {
           />
           <span className="hero-year">2026</span>
           <div className="hero-content">
-            <span className="hero-tag">Escritório — Itapema & Porto Belo, SC</span>
+            <span className="hero-tag">Arquiteta de Interiores — Porto Belo, SC</span>
             <h1 className="hero-title">
               Letícia de<br />
               <em>Andrade</em>

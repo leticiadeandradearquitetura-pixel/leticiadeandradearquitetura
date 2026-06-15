@@ -281,7 +281,7 @@ const etapas = [
 
 const depoimentos = [
   { text: "Recomendo pelo seu toque refinado, atenção aos detalhes e pela forma sutil com que conduz tudo dentro do orçamento recomendado.", author: "José Adelar da Costa" },
-  { text: "O trabalho foi realmente incrível, nosso escritório ficou maravilhoso! Ela fez o projeto e executou do zero — o resultado foi simplesmente maravilhoso.", author: "@bruno.personalonline" },
+  { text: "O trabalho foi realmente incrível, nossa casa ficou maravilhosa! Ela fez o projeto e executou do zero — o resultado foi simplesmente maravilhoso.", author: "@bruno.personalonline" },
   { text: "Me ajudou muito a montar meu espaço do jeitinho que eu queria, respeitando meus gostos e minhas ideias. Indico seu trabalho sempre.", author: "@nutricintiasilva" },
 ];
 

@@ -29,16 +29,16 @@ export const Route = createRootRoute({
     meta: [
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
-      { title: "Lovable App" },
-      { name: "description", content: "Builds interactive architecture portfolio websites with image galleries and project pages." },
+      { title: "Letícia de Andrade | Arquiteta de Interiores em Porto Belo e Itapema, SC" 
+      { name: "description", content: "Arquiteta de interiores em Porto Belo e Itapema, SC. Projetos residenciais personalizados com foco em iluminação, layout e valorização do imóvel." },
       { name: "author", content: "Lovable" },
-      { property: "og:title", content: "Lovable App" },
-      { property: "og:description", content: "Builds interactive architecture portfolio websites with image galleries and project pages." },
+      { property: "og:title", content:"Letícia de Andrade | Arquiteta de Interiores em Porto Belo, SC" },
+      { property: "og:description", content: "Arquiteta de interiores em Porto Belo e Itapema, SC. Projetos residenciais personalizados com foco em iluminação, layout e valorização do imóvel." },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary" },
       { name: "twitter:site", content: "@Lovable" },
-      { name: "twitter:title", content: "Lovable App" },
-      { name: "twitter:description", content: "Builds interactive architecture portfolio websites with image galleries and project pages." },
+      { name: "twitter:title", content: "Letícia de Andrade | Arquiteta de Interiores em Porto Belo, SC" },
+      { name: "twitter:description", content: "Arquiteta de interiores em Porto Belo e Itapema, SC. Projetos residenciais com fidelidade ao projeto" },
       { property: "og:image", content: "https://storage.googleapis.com/gpt-engineer-file-uploads/l8s1qSIDdCfMq2ghgRiG3z2NBKr1/social-images/social-1777409609606-DSC08672202.webp" },
       { name: "twitter:image", content: "https://storage.googleapis.com/gpt-engineer-file-uploads/l8s1qSIDdCfMq2ghgRiG3z2NBKr1/social-images/social-1777409609606-DSC08672202.webp" },
     ],
@@ -76,7 +76,7 @@ export const Route = createRootRoute({
 
 function RootShell({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="en">
+    <html lang="pt-BR">
       <head>
         <HeadContent />
       </head>

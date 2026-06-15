@@ -29,11 +29,10 @@ export const Route = createRootRoute({
     meta: [
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
-      { title: "Letícia de Andrade | Arquiteta de Interiores em Porto Belo e Itapema, SC" 
-      { name: "description", content: "Arquiteta de interiores em Porto Belo e Itapema, SC. Projetos residenciais personalizados com foco em iluminação, layout e valorização do imóvel." },
-      { name: "author", content: "Lovable" },
+      { title: "Letícia de Andrade | Arquiteta de Interiores em Porto Belo e Itapema, SC"},
+      { name: "description", content: "Arquiteta de interiores em Porto Belo e Itapema, SC. Projetos residenciais personalizados com foco em iluminacao, layout e valorizacao do imovel." },
       { property: "og:title", content:"Letícia de Andrade | Arquiteta de Interiores em Porto Belo, SC" },
-      { property: "og:description", content: "Arquiteta de interiores em Porto Belo e Itapema, SC. Projetos residenciais personalizados com foco em iluminação, layout e valorização do imóvel." },
+      { property: "og:description", content: "Arquiteta de interiores em Porto Belo e Itapema, SC. Projetos residenciais personalizados com foco em iluminacao, layout e valorizacao do imovel." },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary" },
       { name: "twitter:site", content: "@Lovable" },
